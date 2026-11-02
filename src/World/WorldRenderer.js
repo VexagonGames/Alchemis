@@ -1,4 +1,9 @@
-import { CHUNK_SIZE, TILE_PROJECTION_SIZE, TILE_RENDER_SIZE } from "../Util/Const.js";
+import {
+    CHUNK_SIZE,
+    ENTITY_DESPAWN_DISTANCE,
+    ENTITY_SPAWN_DISTANCE,
+    TILE_RENDER_SIZE,
+} from "../Util/Const.js";
 import { Project, UnProject } from "../Util/Util.js";
 
 export class WorldRenderer {
@@ -30,10 +35,10 @@ export class WorldRenderer {
             UnProject(0, height, cameraX, cameraY),
             UnProject(width, height, cameraX, cameraY),
         ];
-        const minTileX = Math.floor(Math.min(...visibleTiles.map(point => point.x))) - 1;
-        const maxTileX = Math.ceil(Math.max(...visibleTiles.map(point => point.x))) + 1;
-        const minTileY = Math.floor(Math.min(...visibleTiles.map(point => point.y))) - 1;
-        const maxTileY = Math.ceil(Math.max(...visibleTiles.map(point => point.y))) + 1;
+        const minTileX = Math.floor(Math.min(...visibleTiles.map(point => point.x))) - 4;
+        const maxTileX = Math.ceil(Math.max(...visibleTiles.map(point => point.x))) + 4;
+        const minTileY = Math.floor(Math.min(...visibleTiles.map(point => point.y))) - 4;
+        const maxTileY = Math.ceil(Math.max(...visibleTiles.map(point => point.y))) + 4;
         const minChunkX = Math.floor(minTileX / CHUNK_SIZE) - 1;
         const maxChunkX = Math.floor(maxTileX / CHUNK_SIZE) + 1;
         const minChunkY = Math.floor(minTileY / CHUNK_SIZE) - 1;
@@ -43,6 +48,17 @@ export class WorldRenderer {
 
         const drawList = [];
         for (const chunk of this.world.chunks.values()) {
+            chunk.UpdateVisibleEntities(
+                focus.x,
+                focus.y,
+                minTileX,
+                minTileY,
+                maxTileX,
+                maxTileY,
+                ENTITY_SPAWN_DISTANCE,
+                ENTITY_DESPAWN_DISTANCE
+            );
+
             const startX = chunk.x * CHUNK_SIZE;
             const startY = chunk.y * CHUNK_SIZE;
 

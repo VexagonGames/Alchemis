@@ -1,6 +1,7 @@
 import { World } from "./World/World.js";
 import { Player } from "./World/Entity/Player.js";
 import { WorldRenderer } from "./World/WorldRenderer.js";
+import { SeasonManager } from "./World/Systems/SeasonManager.js";
 
 class Main {
     constructor() {
@@ -23,7 +24,13 @@ class Main {
         window.addEventListener("mouseup", () => this.mouse.btn = -1);
         window.addEventListener("mousemove", (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY });
 
-        this.world = new World();
+        this.systems = {
+            weather: new SeasonManager(),
+            inventory: null,
+            relations: null,
+        };
+
+        this.world = new World(this.systems);
 
         this.player = new Player(0, 0, 1);
         this.world.AddEntity(this.player);
