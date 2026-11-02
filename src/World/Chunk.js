@@ -12,7 +12,7 @@ export class Chunk {
         this.tiles = Array.from(tileIds, (id, index) => {
             return {
                 id,
-                collisionFlag: id === 2 ? 1 : 0,
+                collisionFlag: id > 1 ? 1 : 0,
                 entityFactory: id === 2 ? (tileX, tileY) => new Tree(tileX, tileY) : null,
                 entity: null,
             };

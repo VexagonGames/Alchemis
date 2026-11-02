@@ -11,7 +11,7 @@ export class Player extends Entity {
     }
 
     Render(ctx, px, py, cx, cy) {
-        ctx.fillRect(px, py, 16, 32);
+        ctx.fillRect(px, py-16, 16, 32);
     }
 
     Update(dt, keys, mouse, world) {
