@@ -54,6 +54,9 @@ export class WorldRenderer {
 
                 drawList.push({ x, y, tile: chunk.tiles[index], depth: x + y, kind: 0 });
             }
+
+            for (const entity of chunk.entities)
+                drawList.push({ entity, depth: entity.x + entity.y, kind: 1 });
         }
 
         for (const entity of this.world.entities)
@@ -69,7 +72,14 @@ export class WorldRenderer {
             } else {
                 const entity = item.entity;
                 const point = Project(entity.x, entity.y, entity.z, cameraX, cameraY);
-                entity.Render(ctx, point.x, point.y, cameraX, cameraY);
+                const renderX = point.x + (entity.renderOffsetX || 0);
+                const renderY = point.y + (entity.renderOffsetY || 0);
+                const renderWidth = Math.min(entity.renderWidth || 64, 64);
+                const renderHeight = Math.min(entity.renderHeight || 64, 64);
+
+                if (renderX < width && renderX + renderWidth > 0
+                    && renderY < height && renderY + renderHeight > 0)
+                    entity.Render(ctx, renderX, renderY, cameraX, cameraY);
             }
         }
         ctx.fillStyle = previousFillStyle;
